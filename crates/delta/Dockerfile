@@ -1,12 +1,13 @@
 # Build Stage
-FROM ghcr.io/revoltchat/base:latest AS builder
-RUN cargo install --locked --path crates/delta
+ARG BASE_IMAGE=ghcr.io/revoltchat/base:latest
+FROM ${BASE_IMAGE} AS base
 
 # Bundle Stage
 FROM debian:buster-slim
-RUN apt-get update && apt-get install -y ca-certificates
-COPY --from=builder /usr/local/cargo/bin/revolt-delta ./
-
+RUN apt-get update && \
+    apt-get install -y ca-certificates && \
+    apt-get clean
+COPY --from=base /home/rust/src/target/release/revolt-delta ./
 EXPOSE 8000
 ENV ROCKET_ADDRESS 0.0.0.0
 ENV ROCKET_PORT 8000
