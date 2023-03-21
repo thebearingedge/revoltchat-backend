@@ -9,6 +9,7 @@ pub async fn connect() {
         .connect()
         .await
         .expect("Failed to connect to the database.");
+    println!("test");
 
     DBCONN.set(database).expect("Setting `Database`");
 }
